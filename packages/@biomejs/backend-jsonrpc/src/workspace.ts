@@ -3718,6 +3718,11 @@ export interface Nursery {
 	 */
 	useVueComponentIs?: UseVueComponentIsConfiguration;
 	/**
+	 * Enforce a consistent declaration style for Vue's defineEmits macro.
+	 * See https://biomejs.dev/linter/rules/use-vue-consistent-define-emits-declaration
+	 */
+	useVueConsistentDefineEmitsDeclaration?: UseVueConsistentDefineEmitsDeclarationConfiguration;
+	/**
 	 * Enforce a consistent hyphenation style for event names in v-on directives on custom components.
 	 * See https://biomejs.dev/linter/rules/use-vue-consistent-event-hyphenation
 	 */
@@ -6355,6 +6360,9 @@ export type UseVueBaseImportConfiguration =
 export type UseVueComponentIsConfiguration =
 	| RulePlainConfiguration
 	| RuleWithUseVueComponentIsOptions;
+export type UseVueConsistentDefineEmitsDeclarationConfiguration =
+	| RulePlainConfiguration
+	| RuleWithUseVueConsistentDefineEmitsDeclarationOptions;
 export type UseVueConsistentEventHyphenationConfiguration =
 	| RulePlainConfiguration
 	| RuleWithUseVueConsistentEventHyphenationOptions;
@@ -9273,6 +9281,10 @@ export interface RuleWithUseVueComponentIsOptions {
 	level: RulePlainConfiguration;
 	options?: UseVueComponentIsOptions;
 }
+export interface RuleWithUseVueConsistentDefineEmitsDeclarationOptions {
+	level: RulePlainConfiguration;
+	options?: UseVueConsistentDefineEmitsDeclarationOptions;
+}
 export interface RuleWithUseVueConsistentEventHyphenationOptions {
 	/**
 	 * Controls the applicability of the rule's fix. `none` suppresses the fix, while `safe` and `unsafe` reclassify its applicability. This setting does not change the fix itself.
@@ -11671,6 +11683,13 @@ export interface UseValidTestTitleOptions {
 }
 export type UseVueBaseImportOptions = {};
 export type UseVueComponentIsOptions = {};
+export interface UseVueConsistentDefineEmitsDeclarationOptions {
+	/**
+	 * The style that `defineEmits` calls must use to declare events.
+	 * Defaults to `type`.
+	 */
+	style?: DefineEmitsDeclarationStyle;
+}
 export interface UseVueConsistentEventHyphenationOptions {
 	/**
 	 * Whether event names in `v-on` directives must be hyphenated (`"always"`) or must not
@@ -12612,6 +12631,7 @@ export type ComponentDefinitionStyle =
 	| "functionDeclaration"
 	| "functionExpression"
 	| "arrowFunction";
+export type DefineEmitsDeclarationStyle = "type" | "typeLiteral" | "runtime";
 export type EventHyphenation = "always" | "never";
 /**
  * Specifies whether property assignments on function parameters are allowed or denied.
@@ -13099,14 +13119,14 @@ export type Category =
 	| "lint/nursery/noBooleanSortComparator"
 	| "lint/nursery/noBunModules"
 	| "lint/nursery/noColorInvalidHex"
-	| "lint/nursery/noDanglingUnderscore"
-	| "lint/nursery/noDuplicateMapKeys"
 	| "lint/nursery/noComponentHookFactories"
 	| "lint/nursery/noConditionalExpect"
+	| "lint/nursery/noDanglingUnderscore"
 	| "lint/nursery/noDoubleComparison"
 	| "lint/nursery/noDrizzleDeleteWithoutWhere"
 	| "lint/nursery/noDrizzleUpdateWithoutWhere"
 	| "lint/nursery/noDuplicateFieldDefinitionNames"
+	| "lint/nursery/noDuplicateMapKeys"
 	| "lint/nursery/noDuplicateSelectors"
 	| "lint/nursery/noEagerArrayMethodsInLoops"
 	| "lint/nursery/noEmptyObjectKeys"
@@ -13291,15 +13311,16 @@ export type Category =
 	| "lint/nursery/useValidTestTitle"
 	| "lint/nursery/useVueBaseImport"
 	| "lint/nursery/useVueComponentIs"
+	| "lint/nursery/useVueConsistentDefineEmitsDeclaration"
 	| "lint/nursery/useVueConsistentDefinePropsDeclaration"
 	| "lint/nursery/useVueConsistentEventHyphenation"
 	| "lint/nursery/useVueMatchingComponentFileName"
 	| "lint/nursery/useVueNextTickPromise"
 	| "lint/nursery/useVueToggleInsideTransition"
 	| "lint/nursery/useVueTypedRef"
+	| "lint/nursery/useVueVOnExact"
 	| "lint/nursery/useVueValidVFor"
 	| "lint/nursery/useVueValidVModel"
-	| "lint/nursery/useVueVOnExact"
 	| "lint/nursery/useWhileLoopCondition"
 	| "lint/performance/noAccumulatingSpread"
 	| "lint/performance/noAwaitInLoops"
