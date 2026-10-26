@@ -1,5 +1,161 @@
 # @biomejs/biome
 
+## 2.6.4
+
+### Patch Changes
+
+- [#12261](https://github.com/biomejs/biome/pull/12261) [`19fbfb2`](https://github.com/biomejs/biome/commit/19fbfb2311b5dc4bf1b6ee8dd5b258d9699436a5) Thanks [@dyc3](https://github.com/dyc3)! - Added the new nursery rule [`noConsoleSpaces`](https://biomejs.dev/linter/rules/no-console-spaces/), which reports a leading or trailing space in a `console.log()`, `console.debug()`, `console.info()`, `console.warn()`, or `console.error()` argument that sits next to another argument. These methods already put a space between arguments, so such a space prints twice.
+  
+  ```js
+  console.log("abc ", "def");
+  ```
+
+- [#12469](https://github.com/biomejs/biome/pull/12469) [`cd716d3`](https://github.com/biomejs/biome/commit/cd716d38575ce603d8cddbabec97b3d52463858b) Thanks [@dyc3](https://github.com/dyc3)! - Added the new nursery rule [`noMagicArrayFlatDepth`](https://biomejs.dev/linter/rules/no-magic-array-flat-depth/), which reports number literals other than `1` passed as the depth of `Array.prototype.flat()` unless a comment inside the parentheses explains them.
+  
+  ```js
+  const items = array.flat(2);
+  ```
+
+- [#12470](https://github.com/biomejs/biome/pull/12470) [`92c9e81`](https://github.com/biomejs/biome/commit/92c9e81bd7c767b4b3e583a312f75c0f364298dd) Thanks [@dyc3](https://github.com/dyc3)! - Added the nursery rule [`noNull`](https://biomejs.dev/linter/rules/no-null/), which reports uses of the `null` literal and suggests `undefined` instead. Strict comparisons such as `foo === null` are allowed.
+  
+  ```js
+  let foo = null;
+  ```
+
+- [#12483](https://github.com/biomejs/biome/pull/12483) [`9bd3527`](https://github.com/biomejs/biome/commit/9bd35277c99fffa6b252a594a2a74e553e977b3b) Thanks [@dyc3](https://github.com/dyc3)! - Added the nursery rule [`noReturnArrayPush`](https://biomejs.dev/linter/rules/no-return-array-push/), which reports code that uses the return value of `push()` or `unshift()`. These methods return the new length of the array, not the added item or the array.
+  
+  ```js
+  function add(item) {
+    return items.push(item);
+  }
+  ```
+
+- [#12477](https://github.com/biomejs/biome/pull/12477) [`a384892`](https://github.com/biomejs/biome/commit/a384892c6b9f882b9c1751bf725cb84d9c8738b6) Thanks [@dyc3](https://github.com/dyc3)! - Added the nursery rule [`noUnreadableIife`](https://biomejs.dev/linter/rules/no-unreadable-iife/), which reports arrow functions that are called right where they are defined and whose body is wrapped in parentheses.
+  
+  ```js
+  const foo = (bar => (bar ? bar.baz : baz))(getBar());
+  ```
+
+- [#12447](https://github.com/biomejs/biome/pull/12447) [`0a963e4`](https://github.com/biomejs/biome/commit/0a963e4a30cfb550e0994bd925d16391e725bf4f) Thanks [@dyc3](https://github.com/dyc3)! - Added the nursery rule [`noUselessRecursion`](https://biomejs.dev/linter/rules/no-useless-recursion/), which reports functions that return a call to themselves when a loop can do the same work. Too many nested calls can crash the program with a stack overflow error.
+  
+  ```js
+  function findRoot(node) {
+      if (node.parent) {
+          return findRoot(node.parent);
+      }
+      return node;
+  }
+  ```
+
+- [#12285](https://github.com/biomejs/biome/pull/12285) [`68770e0`](https://github.com/biomejs/biome/commit/68770e008365f0351d82c39cc6498293e4717110) Thanks [@dyc3](https://github.com/dyc3)! - Added the new nursery rule [`noYamlBooleanKeys`](https://biomejs.dev/linter/rules/no-yaml-boolean-keys/), which disallows boolean values as keys in YAML. For example, the following key is a boolean instead of text, so it is reported:
+  
+  ```yaml
+  true: enabled
+  ```
+
+- [#12338](https://github.com/biomejs/biome/pull/12338) [`f46411b`](https://github.com/biomejs/biome/commit/f46411b97772e24221dc1a8f406c8d07004f23e3) Thanks [@dyc3](https://github.com/dyc3)! - Added the nursery rule [`useSvelteEventDispatcherTypes`](https://biomejs.dev/linter/rules/use-svelte-event-dispatcher-types/), which reports `createEventDispatcher()` calls that don't declare the types of their events in Svelte components written in TypeScript.
+  
+  The rule accepts a call that declares its events:
+  
+  ```svelte
+  <script lang="ts">
+    import { createEventDispatcher } from "svelte";
+  
+    const dispatch = createEventDispatcher<{ save: string }>();
+  </script>
+  ```
+
+- [#12472](https://github.com/biomejs/biome/pull/12472) [`efd16bd`](https://github.com/biomejs/biome/commit/efd16bd44d84ad0580d59d27bba6843323761b42) Thanks [@dyc3](https://github.com/dyc3)! - Added the new nursery rule [`useWhileLoopCondition`](https://biomejs.dev/linter/rules/use-while-loop-condition/), which reports loops such as `while (true)` and `for (;;)` that start with an `if` statement containing only a `break`, and moves that condition into the `while` statement.
+  
+  ```js
+  while (true) {
+    if (!hasMore()) {
+      break;
+    } // reported
+    processNext();
+  }
+  ```
+
+- [#12640](https://github.com/biomejs/biome/pull/12640) [`167bb00`](https://github.com/biomejs/biome/commit/167bb00ed962640cb72bc1d896fd5f6e98e8ef4d) Thanks [@latin-1](https://github.com/latin-1)! - Updated [`useSortedProperties`](https://biomejs.dev/assist/actions/use-sorted-properties/) to follow `stylelint-config-recess-order` 7.9.0, adding sorting support for `scroll-behavior`, anchor positioning, multi-column layout, and other properties known to Biome.
+
+- [`59ff42a`](https://github.com/biomejs/biome/commit/59ff42a79c795edd9bbdc64719bb43b7d4cf822c) Thanks [@kurovskyiii](https://github.com/kurovskyiii)! - Fixed [#12651](https://github.com/biomejs/biome/issues/12651): an imported name that the other module exports as both a type and a value now resolves to the type in type annotations, so [`noBaseToString`](https://biomejs.dev/linter/rules/no-base-to-string/) no longer reports `slug` below as an object.
+  
+  ```ts
+  // rule-slug.ts
+  export type RuleSlug = string;
+  export const RuleSlug = { create: (text: string): RuleSlug => text } as const;
+  
+  // main.ts
+  import { RuleSlug } from "./rule-slug";
+  export const label = (slug: RuleSlug): string => `rule ${slug}`;
+  ```
+
+- [#12678](https://github.com/biomejs/biome/pull/12678) [`301402f`](https://github.com/biomejs/biome/commit/301402f9bcaec9087dc00fac2d2240880dc48921) Thanks [@nhedger](https://github.com/nhedger)! - Fixed [biomejs/biome-vscode#1113](https://github.com/biomejs/biome-vscode/issues/1113): the language server now shows a warning when the configuration file can't be parsed. Previously, Biome stopped processing files without telling the user why.
+
+- [#12662](https://github.com/biomejs/biome/pull/12662) [`8c836eb`](https://github.com/biomejs/biome/commit/8c836eb1b7e80af3674dfd124887612c5f975faa) Thanks [@dyc3](https://github.com/dyc3)! - Fixed [#12645](https://github.com/biomejs/biome/issues/12645): the Markdown formatter no longer removes the blank line between a blockquote and the list that follows it, matching Prettier.
+  
+  ```md
+  > A note.
+  
+  - one
+  - two
+  ```
+
+- [#12662](https://github.com/biomejs/biome/pull/12662) [`8c836eb`](https://github.com/biomejs/biome/commit/8c836eb1b7e80af3674dfd124887612c5f975faa) Thanks [@dyc3](https://github.com/dyc3)! - Fixed [#12663](https://github.com/biomejs/biome/issues/12663): the Markdown formatter no longer removes the blank line between a table and the list that follows it, matching Prettier.
+  
+  ```md
+  | Table |
+  | ----- |
+  | Value |
+  
+  - Hello
+  ```
+
+- [`0da9080`](https://github.com/biomejs/biome/commit/0da9080f34514c18cdc012e75b4c18d113c7ca01) Thanks [@jfmcdowell](https://github.com/jfmcdowell)! - Fixed formatting of Markdown block quotes inside deeply indented list items. With `proseWrap: "always"`, consecutive quote lines now wrap together within the same quote, while setext headings and fenced code blocks keep their structure.
+  
+  ```diff
+   10. item
+  -    > first line
+  -    > second line
+  +    > first line second line
+  ```
+
+- [#12607](https://github.com/biomejs/biome/pull/12607) [`896d53e`](https://github.com/biomejs/biome/commit/896d53eff2984a8e96d39f4419dd12ccdff15493) Thanks [@xucian](https://github.com/xucian)! - Fixed [#12542](https://github.com/biomejs/biome/issues/12542): the Markdown formatter is no longer idempotent when it formats tables.
+  
+  ```diff
+  - | a        | b     |
+  - | -------- | ----- |
+  - | x        | `y` z |
+  - | `p` z`q` | r     |
+  + | a         | b     |
+  + | --------- | ----- |
+  + | x         | `y` z |
+  + | `p` z `q` | r     |
+  ```
+
+- [#12682](https://github.com/biomejs/biome/pull/12682) [`fa7cf4c`](https://github.com/biomejs/biome/commit/fa7cf4c0511ac2a07d6af42064c4108488aca0c6) Thanks [@dyc3](https://github.com/dyc3)! - Fixed [#12679](https://github.com/biomejs/biome/issues/12679): when `markdown.parser.frontmatter` and `markdown.formatter.formatEmbeds` are enabled, the Markdown formatter keeps the frontmatter of a fenced Markdown code block as written. Previously, it formatted the frontmatter as a thematic break and a paragraph, which removed the indentation of its YAML.
+  
+  ````md
+  ```markdown
+  ---
+  verified:
+    by: human
+  ---
+  # Policy
+  ```
+  ````
+
+- [#12649](https://github.com/biomejs/biome/pull/12649) [`343c8ca`](https://github.com/biomejs/biome/commit/343c8ca9cc718d76717b334338cc7eff94b0d426) Thanks [@JamBalaya56562](https://github.com/JamBalaya56562)! - Fixed [#12643](https://github.com/biomejs/biome/issues/12643) and [#12669](https://github.com/biomejs/biome/issues/12669): Biome now migrates the Prettier option `bracketSpacing` to `formatter.bracketSpacing`, both at the top level and inside `overrides`. JSON and GraphQL files are now formatted with the same bracket spacing as JavaScript files.
+
+- [#12640](https://github.com/biomejs/biome/pull/12640) [`167bb00`](https://github.com/biomejs/biome/commit/167bb00ed962640cb72bc1d896fd5f6e98e8ef4d) Thanks [@latin-1](https://github.com/latin-1)! - Fixed [`useSortedProperties`](https://biomejs.dev/assist/actions/use-sorted-properties/) to withhold sorting fixes that would change the effective values of overlapping declarations, physical/logical border or corner properties, or declarations followed by `all`.
+  Updated [`noShorthandPropertyOverrides`](https://biomejs.dev/linter/rules/no-shorthand-property-overrides/) to recognize logical border, corner shape, `position-try`, `text-box`, and `transition-behavior` overrides.
+
+- [#12664](https://github.com/biomejs/biome/pull/12664) [`6021da0`](https://github.com/biomejs/biome/commit/6021da0fad40d556123ff227b9034cbed90b2ea2) Thanks [@MindTooth](https://github.com/MindTooth)! - Fixed Biome processing `pnpm-lock.yaml` files. These generated lockfiles are now protected from processing.
+
+- [#12656](https://github.com/biomejs/biome/pull/12656) [`25a00a2`](https://github.com/biomejs/biome/commit/25a00a2a4c61eb24923ff8c91f60672320c80833) Thanks [@dyc3](https://github.com/dyc3)! - Fixed non-JSON files inside the global settings directories of Zed, VS Code, and Cursor being parsed as JSON.
+
+- [#12656](https://github.com/biomejs/biome/pull/12656) [`25a00a2`](https://github.com/biomejs/biome/commit/25a00a2a4c61eb24923ff8c91f60672320c80833) Thanks [@dyc3](https://github.com/dyc3)! - Improved the performance of Biome when it processes many files by up to 7%.
+
 ## 2.6.3
 
 ### Patch Changes
